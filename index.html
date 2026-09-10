@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Possibility Lab · SketchDeck Montreal Retreat 2026</title>
+<link rel="icon" href="assets/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@400&display=swap" rel="stylesheet">
+  <style>
+    html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #C0D8FF; }
+    body { font-family: Inter, "Helvetica Neue", Arial, sans-serif; color: #161638; -webkit-font-smoothing: antialiased; }
+    a { color: #161638; } a:hover { color: #161638; opacity: 0.85; }
+    * { box-sizing: border-box; }
+    .display { font-family: Syne, "Arial Narrow", Arial, sans-serif; font-weight: 400; letter-spacing: -0.02em; line-height: 0.88; text-transform: uppercase; text-align: center; width: 100%; }
+    .eyebrow { font-size: 20px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; text-align: center; width: 100%; }
+    .lede { font-size: 26px; line-height: 1.35; font-weight: 400; text-align: center; }
+
+    .fold { position: absolute; inset: 0; overflow: hidden; }
+    .fold.hidden { display: none; }
+    .fold.enter-down, .fold.enter-up { z-index: 2; }
+    .fold.leave-down, .fold.leave-up { z-index: 1; pointer-events: none; }
+    .inner { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .fold.leave-down .inner { animation: innerOutUp 0.7s cubic-bezier(0.5, 0, 0.75, 0) both; }
+    .fold.leave-up .inner { animation: innerOutDown 0.7s cubic-bezier(0.5, 0, 0.75, 0) both; }
+    @keyframes innerOutUp { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(-90px); } }
+    @keyframes innerOutDown { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(90px); } }
+
+    @keyframes rise { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: none; } }
+    @keyframes pop { from { opacity: 0; transform: translateY(36px) scale(0.96); } to { opacity: 1; transform: none; } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes reveal { from { transform: translateY(108%); } to { transform: none; } }
+    @keyframes blink { 0%, 100% { box-shadow: 0 0 0 2px #161638, 0 0 0 6px rgba(216,222,0,0); } 50% { box-shadow: 0 0 0 2px #161638, 0 0 0 14px rgba(216,222,0,0.55); } }
+    .here { animation: pop 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both, blink 1.6s ease-in-out 1.2s infinite; }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
+    @keyframes spin3d {
+      0% { opacity: 0; transform: rotateY(85deg) scale(0.9); }
+      1.333% { opacity: 1; transform: rotateY(0deg) scale(1); }
+      7.167% { opacity: 1; transform: rotateY(-12deg) scale(1.02); }
+      8.333% { opacity: 0.55; transform: rotateY(-62deg) scale(0.97); }
+      8.933% { opacity: 0; transform: rotateY(-95deg) scale(0.9); }
+      8.943%, 100% { opacity: 0; transform: rotateY(85deg) scale(0.9); }
+    }
+    .r { animation: rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+    .p { animation: pop 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+    .f { animation: fadeIn 1.1s ease both; }
+    .d1 { animation-delay: 0.45s; } .d2 { animation-delay: 0.55s; } .d3 { animation-delay: 0.65s; } .d4 { animation-delay: 0.75s; }
+    .d5 { animation-delay: 0.85s; } .d6 { animation-delay: 0.95s; } .d7 { animation-delay: 1.05s; } .d8 { animation-delay: 1.15s; } .d9 { animation-delay: 1.25s; } .d10 { animation-delay: 1.35s; } .d11 { animation-delay: 1.45s; }
+    .clip { overflow: hidden; }
+    .clip > span { display: block; animation: reveal 1s cubic-bezier(0.2, 0.7, 0.1, 1) both; animation-delay: 0.35s; }
+    .clip.l2 > span { animation-delay: 0.48s; }
+    .bglayer { position: absolute; inset: 0; animation: fadeIn 0.9s ease both; }
+    .bglayer.out { animation: fadeOut 0.7s ease both; }
+    @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+    .bglayer img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+
+    .stage3d { position: absolute; left: 50%; top: 62px; width: 680px; height: 680px; margin: 0 0 0 -340px; perspective: 1400px; }
+    .fold.leave-down .stage3d, .fold.leave-up .stage3d { display: none; }
+    .stage3d .spin { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; animation: spin3d 33.6s ease-in-out infinite; backface-visibility: hidden; transform-style: preserve-3d; }
+
+    .card { border-radius: 24px; display: flex; align-items: center; justify-content: center; text-align: center; text-transform: uppercase; }
+    .pill { height: 56px; padding: 0 30px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 500; white-space: nowrap; }
+    .grid { display: grid; gap: 24px; width: 1360px; }
+    .dots { position: absolute; right: 26px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 12px; z-index: 5; }
+    .dot { width: 32px; height: 32px; border: 0; padding: 0; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .dot span { display: block; width: 7px; height: 7px; border-radius: 50%; transition: transform 0.3s ease, opacity 0.3s ease; }
+    .dot:hover span { opacity: 0.8; }
+    .tbtn { height: 60px; padding: 0 34px; border-radius: 999px; font-family: Inter, Arial, sans-serif; font-size: 20px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; cursor: pointer; transition: transform 0.15s ease, background 0.15s ease; }
+    .tbtn:hover { transform: translateY(-1px); }
+    .tbtn:active { transform: translateY(1px); }
+    .fs { position: absolute; top: 22px; right: 22px; width: 44px; height: 44px; border-radius: 50%; border: 0; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; opacity: 0.45; transition: opacity 0.2s ease; z-index: 5; }
+    .fs:hover { opacity: 1; }
+    .cuewrap { position: absolute; bottom: 30px; left: 0; width: 100%; display: flex; justify-content: center; }
+    .cue { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 500; opacity: 0.7; }
+    .cue svg { animation: bounce 1.6s ease-in-out infinite; }
+  </style>
+<style>
+    .dot span { background: var(--fg); }
+    .dot.on span { transform: scale(1.9); opacity: 1; }
+    .dot:not(.on) span { opacity: 0.35; }
+    .fs { color: var(--fg); }
+    #wrap { --fg: #161638; }
+    #wrap.dark { --fg: #FFFFFF; }
+    .fold.hidden { display: none; }
+</style>
+</head>
+<body>
+<div id="wrap" style="position: fixed; inset: 0; overflow: hidden; background: #C0D8FF; transition: background 0.8s ease;">
+
+  <div class="bglayer" id="bgDeck" hidden><img src="assets/nebula.jpg" alt="The Deck nebula background"><div style="position: absolute; inset: 0; background: rgba(22,22,56,0.2);"></div></div>
+
+  <div style="position: absolute; left: 50%; top: 50%; width: 1600px; height: 900px; transform: translate(-50%, -50%) scale(1); transform-origin: center center;" id="stage">
+
+    <!-- 01 Hero -->
+    <div class="fold hidden" data-fold="1"><template>
+        <div class="inner">
+          <div class="f" style="position: absolute; top: 14px; left: 0; width: 100%; display: flex; justify-content: center; z-index: 2;"><img src="assets/logo.png" alt="SketchDeck, a 24 Seven company" style="width: 170px; height: auto; display: block;"></div>
+          <div class="stage3d f" style="animation-delay: 0.8s;"><img src="assets/fur.jpg" alt="" class="spin" style="animation-delay: -0.0s;"><img src="assets/fur-1.jpg" alt="" class="spin" style="animation-delay: -2.8s;"><img src="assets/fur-2.jpg" alt="" class="spin" style="animation-delay: -5.6s;"><img src="assets/fur-3.jpg" alt="" class="spin" style="animation-delay: -8.4s;"><img src="assets/fur-4.jpg" alt="" class="spin" style="animation-delay: -11.2s;"><img src="assets/fur-5.jpg" alt="" class="spin" style="animation-delay: -14.0s;"><img src="assets/fur-6.jpg" alt="" class="spin" style="animation-delay: -16.8s;"><img src="assets/fur-7.jpg" alt="" class="spin" style="animation-delay: -19.6s;"><img src="assets/fur-8.jpg" alt="" class="spin" style="animation-delay: -22.4s;"><img src="assets/fur-9.jpg" alt="" class="spin" style="animation-delay: -25.2s;"><img src="assets/fur-10.jpg" alt="" class="spin" style="animation-delay: -28.0s;"><img src="assets/fur-11.jpg" alt="" class="spin" style="animation-delay: -30.8s;"></div>
+          <div class="display" style="position: absolute; top: 150px; left: 0; font-size: 196px; line-height: 0.84; color: #161638;">
+            <div class="clip"><span>The</span></div>
+            <div class="clip l2"><span>Possibility</span></div>
+            <div class="clip"><span style="animation-delay: 0.6s;">Lab</span></div>
+          </div>
+          <div class="r d4" style="position: absolute; top: 740px; left: 0; width: 100%; font-size: 28px; font-weight: 400; text-align: center;">A hands-on AI-powered creative sprint</div>
+          <div class="r d6" style="position: absolute; top: 786px; left: 0; width: 100%; display: flex; justify-content: center;"><div class="pill" style="border: 2px solid #161638; color: #161638; font-size: 16px; letter-spacing: 0.1em; text-transform: uppercase; height: 44px; padding: 0 26px;">Montreal Retreat 2026</div></div>
+          <div class="cuewrap" style="bottom: 8px;"><div class="cue r d8"><span>Scroll</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#161638" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg></div></div>
+        </div>
+      </template></div>
+
+    <!-- 02 Goal -->
+    <div class="fold hidden" data-fold="2"><template>
+        <div class="inner">
+          <div class="eyebrow r" style="animation-delay: 0.4s;">Today’s goal</div>
+          <div class="display" style="font-size: 148px; margin-top: 26px;">
+            <div class="clip"><span>Get comfortable</span></div>
+            <div class="clip l2"><span>making with AI</span></div>
+          </div>
+          <div class="lede r d3" style="max-width: 900px; margin-top: 44px;">By the end of the workshop, every participant should walk away with a shift in mindset, leaving with the empowering thought:</div>
+          <div class="r d5" style="display: flex; gap: 16px; margin-top: 40px; justify-content: center;">
+            <div class="pill" style="background: #C0D8FF;">AI is not scary</div>
+            <div class="pill" style="background: #C0D8FF;">AI is powerful, but it still needs my direction</div>
+            <div class="pill" style="background: #C0D8FF;">I can actually use AI to improve work</div>
+          </div>
+        </div>
+      </template></div>
+
+    <!-- 03 Challenge -->
+    <div class="fold hidden" data-fold="3"><template>
+        <div class="inner">
+          <div class="display clip" style="font-size: 170px;"><span>The Challenge</span></div>
+          <div class="lede r d2" style="margin-top: 22px; font-size: 30px;">Build something SketchDeck-related using AI.</div>
+          <div class="grid" style="grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 64px;">
+            <div class="card p d3" style="height: 250px; background: #C0D8FF; padding: 0 28px; font-size: 32px; line-height: 1.15;">Learn by making</div>
+            <div class="card p d4" style="height: 250px; background: #B8ACFF; padding: 0 28px; font-size: 32px; line-height: 1.15;">Keep it SketchDeck-relevant</div>
+            <div class="card p d5" style="height: 250px; background: #FFB2D5; padding: 0 28px; font-size: 32px; line-height: 1.15;">Creative + operational</div>
+            <div class="card p d6" style="height: 250px; background: #D8DE00; padding: 0 28px; font-size: 32px; line-height: 1.15;">Anyone can participate</div>
+          </div>
+        </div>
+      </template></div>
+
+    <!-- 04 Toolkit -->
+    <div class="fold hidden" data-fold="4"><template>
+        <div class="inner">
+          <div class="display clip" style="font-size: 170px;"><span>Your AI Toolkit</span></div>
+          <div class="lede r d2" style="margin-top: 22px; font-size: 30px;">Use whatever helps you make the idea.</div>
+          <div class="r d4" style="display: flex; gap: 16px; margin-top: 60px; flex-wrap: wrap; justify-content: center; max-width: 1400px;">
+            <div class="pill" style="background: #D8DE00; height: 72px; font-size: 28px; padding: 0 40px;">Claude</div>
+            <div class="pill" style="background: #D8DE00; height: 72px; font-size: 28px; padding: 0 40px;">Figma AI</div>
+            <div class="pill" style="background: #D8DE00; height: 72px; font-size: 28px; padding: 0 40px;">Platform MCP</div>
+            <div class="pill" style="background: #C0D8FF; height: 72px; font-size: 28px; padding: 0 40px;">Image generation</div>
+            <div class="pill" style="background: #C0D8FF; height: 72px; font-size: 28px; padding: 0 40px;">Video / voice / copy</div>
+          </div>
+          <div class="display r d7" style="font-size: 64px; margin-top: 96px; letter-spacing: -0.01em;">Idea first. Tools second.</div>
+        </div>
+      </template></div>
+
+    <!-- 05 Platform MCP -->
+    <div class="fold hidden" data-fold="5"><template>
+        <div class="inner" style="justify-content: flex-start; padding-top: 96px;">
+          <div class="display" style="font-size: 124px;">
+            <div class="clip"><span>Platform MCP:</span></div>
+            <div class="clip l2"><span>a new superpower</span></div>
+          </div>
+          <div class="lede r d2" style="margin-top: 30px; font-size: 28px;">Claude can now read from SketchDeck’s platform.</div>
+          <div class="grid" style="grid-template-columns: repeat(2, minmax(0, 1fr)); width: 1460px; gap: 0 120px; margin-top: 76px;">
+            <div class="r d3" style="border-top: 2px solid #161638; padding: 28px 0 44px;"><div style="font-size: 28px; text-transform: uppercase; letter-spacing: 0.04em;">Projects</div><div style="margin-top: 14px; font-size: 24px; line-height: 1.4;">Summarize a project, status or timeline.</div></div>
+            <div class="r d4" style="border-top: 2px solid #161638; padding: 28px 0 44px;"><div style="font-size: 28px; text-transform: uppercase; letter-spacing: 0.04em;">Accounts</div><div style="margin-top: 14px; font-size: 24px; line-height: 1.4;">Ask about an account and its recent work.</div></div>
+            <div class="r d5" style="border-top: 2px solid #161638; padding: 28px 0 44px;"><div style="font-size: 28px; text-transform: uppercase; letter-spacing: 0.04em;">Find past work</div><div style="margin-top: 14px; font-size: 24px; line-height: 1.4;">Find similar projects to sanity-check a scope.</div></div>
+            <div class="r d6" style="border-top: 2px solid #161638; padding: 28px 0 44px;"><div style="font-size: 28px; text-transform: uppercase; letter-spacing: 0.04em;">Your work</div><div style="margin-top: 14px; font-size: 24px; line-height: 1.4;">See your tasks, projects or recent activity.</div></div>
+          </div>
+          <div class="pill r d7" style="margin-top: 22px; border: 2px solid #161638; font-size: 17px; letter-spacing: 0.1em; text-transform: uppercase; height: 48px;">Read-only · Same permissions you already have</div>
+        </div>
+      </template></div>
+
+    <!-- 06 Inspiration -->
+    <div class="fold hidden" data-fold="6"><template>
+        <div class="inner">
+          <div class="display clip" style="font-size: 150px;"><span>A little inspiration</span></div>
+          <div class="lede r d2" style="margin-top: 20px; font-size: 28px;">Four things people have already made with AI.</div>
+          <div class="grid" style="grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 52px;">
+            <a class="p d3" href="https://pull-a-fry.sketchdeck.com/" target="_blank" rel="noopener" style="display: block; background: #FFFFFF; border-radius: 24px; overflow: hidden; text-decoration: none; color: #161638;">
+              <div style="height: 200px; overflow: hidden;"><img src="assets/thumb-fry.jpg" alt="Pull-a-Fry" style="width: 100%; height: 100%; object-fit: cover; object-position: top; display: block;"></div>
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 22px 24px; font-size: 26px; font-weight: 500;">Pull-a-Fry<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#161638" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"></path><path d="M8 7h9v9"></path></svg></div>
+            </a>
+            <a class="p d4" href="https://pomade.tv/g-invisible-engine/" target="_blank" rel="noopener" style="display: block; background: #FFFFFF; border-radius: 24px; overflow: hidden; text-decoration: none; color: #161638;">
+              <div style="height: 200px; overflow: hidden;"><img src="assets/thumb-engine.jpg" alt="Invisible Engine" style="width: 100%; height: 100%; object-fit: cover; object-position: top; display: block;"></div>
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 22px 24px; font-size: 26px; font-weight: 500;">Invisible Engine<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#161638" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"></path><path d="M8 7h9v9"></path></svg></div>
+            </a>
+            <a class="p d5" href="https://human-atlas-seven.vercel.app/" target="_blank" rel="noopener" style="display: block; background: #FFFFFF; border-radius: 24px; overflow: hidden; text-decoration: none; color: #161638;">
+              <div style="height: 200px; overflow: hidden;"><img src="assets/thumb-atlas.jpg" alt="Human Atlas" style="width: 100%; height: 100%; object-fit: cover; object-position: top; display: block;"></div>
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 22px 24px; font-size: 26px; font-weight: 500;">Human Atlas<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#161638" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"></path><path d="M8 7h9v9"></path></svg></div>
+            </a>
+            <a class="p d6" href="https://jelly.scottsun.io/" target="_blank" rel="noopener" style="display: block; background: #FFFFFF; border-radius: 24px; overflow: hidden; text-decoration: none; color: #161638;">
+              <div style="height: 200px; overflow: hidden;"><img src="assets/thumb-jelly.jpg" alt="Jelly baby" style="width: 100%; height: 100%; object-fit: cover; object-position: top; display: block;"></div>
+              <div style="display: flex; align-items: center; justify-content: space-between; padding: 22px 24px; font-size: 26px; font-weight: 500;">Jelly baby<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#161638" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"></path><path d="M8 7h9v9"></path></svg></div>
+            </a>
+          </div>
+        </div>
+      </template></div>
+
+    <!-- 07 Timeline -->
+    <div class="fold hidden" data-fold="7"><template>
+        <div class="inner" style="justify-content: flex-start; padding-top: 120px;">
+          <div class="display clip" style="font-size: 150px;"><span>Today’s timeline</span></div>
+          <div class="lede r d2" style="margin-top: 20px; font-size: 28px;">3.5 hours. 7 steps. One build sprint.</div>
+          <div style="position: relative; width: 1560px; height: 280px; margin-top: 56px;">
+            <div class="p d3" style="position: absolute; left: 20px; width: 144px; top: 142px; height: 4px; background: #161638; "></div><div class="r d3" style="position: absolute; left: 20px; width: 144px; top: 76px; text-align: center; font-size: 26px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;">10 MIN</div><div class="p d3 here" style="position: absolute; left: 78px; top: 130px; width: 28px; height: 28px; border-radius: 50%; background: #161638; border: 4px solid #F4F4F0; box-shadow: 0 0 0 2px #161638;"></div><div class="r d3" style="position: absolute; left: 26px; width: 132px; top: 186px; text-align: center; font-size: 19px; line-height: 1.3; color: #161638;">Welcome + challenge</div><div class="p d4" style="position: absolute; left: 164px; width: 145px; top: 142px; height: 4px; background: #161638; "></div><div class="r d4" style="position: absolute; left: 164px; width: 145px; top: 76px; text-align: center; font-size: 26px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;">10 MIN</div><div class="p d4" style="position: absolute; left: 222px; top: 130px; width: 28px; height: 28px; border-radius: 50%; background: #161638; border: 4px solid #F4F4F0; box-shadow: 0 0 0 2px #161638;"></div><div class="r d4" style="position: absolute; left: 170px; width: 133px; top: 186px; text-align: center; font-size: 19px; line-height: 1.3; color: #161638;">Team Assemble + Get Settled</div><div class="p d5" style="position: absolute; left: 309px; width: 144px; top: 142px; height: 4px; background: #161638; "></div><div class="r d5" style="position: absolute; left: 309px; width: 144px; top: 76px; text-align: center; font-size: 26px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;">20 MIN</div><div class="p d5" style="position: absolute; left: 367px; top: 130px; width: 28px; height: 28px; border-radius: 50%; background: #161638; border: 4px solid #F4F4F0; box-shadow: 0 0 0 2px #161638;"></div><div class="r d5" style="position: absolute; left: 315px; width: 132px; top: 186px; text-align: center; font-size: 19px; line-height: 1.3; color: #161638;">Ideation Sprint + The Deck</div><div class="p d6" style="position: absolute; left: 453px; width: 551px; top: 137px; height: 14px; background: #C0D8FF; border-radius: 999px;"></div><div class="r d6" style="position: absolute; left: 453px; width: 551px; top: 76px; text-align: center; font-size: 26px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;">100 MIN</div><div class="p d6" style="position: absolute; left: 714px; top: 130px; width: 28px; height: 28px; border-radius: 50%; background: #C0D8FF; border: 4px solid #F4F4F0; box-shadow: 0 0 0 2px #161638;"></div><div class="r d6" style="position: absolute; left: 459px; width: 539px; top: 186px; text-align: center; font-size: 19px; line-height: 1.3; color: #161638;">Build Sprint</div><div class="p d7" style="position: absolute; left: 1004px; width: 144px; top: 142px; height: 4px; background: #161638; "></div><div class="r d7" style="position: absolute; left: 1004px; width: 144px; top: 76px; text-align: center; font-size: 26px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;">10 MIN</div><div class="p d7" style="position: absolute; left: 1062px; top: 130px; width: 28px; height: 28px; border-radius: 50%; background: #161638; border: 4px solid #F4F4F0; box-shadow: 0 0 0 2px #161638;"></div><div class="r d7" style="position: absolute; left: 1010px; width: 132px; top: 186px; text-align: center; font-size: 19px; line-height: 1.3; color: #161638;">Demo prep + Quick break</div><div class="p d8" style="position: absolute; left: 1148px; width: 248px; top: 142px; height: 4px; background: #161638; "></div><div class="r d8" style="position: absolute; left: 1148px; width: 248px; top: 76px; text-align: center; font-size: 26px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;">45 MIN</div><div class="p d8" style="position: absolute; left: 1258px; top: 130px; width: 28px; height: 28px; border-radius: 50%; background: #161638; border: 4px solid #F4F4F0; box-shadow: 0 0 0 2px #161638;"></div><div class="r d8" style="position: absolute; left: 1154px; width: 236px; top: 186px; text-align: center; font-size: 19px; line-height: 1.3; color: #161638;">Demos</div><div class="p d9" style="position: absolute; left: 1396px; width: 144px; top: 137px; height: 14px; background: #D8DE00; border-radius: 999px;"></div><div class="r d9" style="position: absolute; left: 1396px; width: 144px; top: 76px; text-align: center; font-size: 26px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;">15 MIN</div><div class="p d9" style="position: absolute; left: 1454px; top: 130px; width: 28px; height: 28px; border-radius: 50%; background: #D8DE00; border: 4px solid #F4F4F0; box-shadow: 0 0 0 2px #161638;"></div><div class="r d9" style="position: absolute; left: 1402px; width: 132px; top: 186px; text-align: center; font-size: 19px; line-height: 1.3; color: #161638;">Awards + Wrap up</div><div class="p d3" style="position: absolute; left: 20px; width: 144px; top: 14px; display: flex; justify-content: center;"><div style="position: relative; height: 34px; padding: 0 16px; border-radius: 999px; background: #D8DE00; display: inline-flex; align-items: center; font-size: 14px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;">We are here<span style="position: absolute; left: 50%; bottom: -7px; width: 12px; height: 12px; margin-left: -6px; background: #D8DE00; transform: rotate(45deg);"></span></div></div>
+          </div>
+        </div>
+      </template></div>
+
+    <!-- 08 Groups -->
+    <div class="fold hidden" data-fold="8"><template>
+        <div class="inner">
+          <div class="display clip" style="font-size: 140px;"><span>Meet your groups</span></div>
+          <div class="lede r d2" style="margin-top: 16px; font-size: 22px;"><span style="display: inline-block; background: #D8DE00; border-radius: 8px; padding: 0 10px; font-weight: 600;">Highlighted</span> names are the group leads.</div>
+          <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 64px 24px; width: 1400px; margin-top: 44px;"><div class="r d2" style="text-align: center; width: 332px;"><div class="pill" style="background: #C0D8FF; font-size: 20px; height: 44px; text-transform: uppercase; letter-spacing: 0.04em;">Group 1</div><div style="margin-top: 14px; font-size: 22px; line-height: 1.4;"><span style="display: inline-block; background: #D8DE00; border-radius: 8px; padding: 0 10px; font-weight: 600;">Lucia Venzano</span><br>Jessica Madufor<br>Cristina Segar<br>Jordan Herelle<br>Chris Finneral</div></div><div class="r d3" style="text-align: center; width: 332px;"><div class="pill" style="background: #C0D8FF; font-size: 20px; height: 44px; text-transform: uppercase; letter-spacing: 0.04em;">Group 2</div><div style="margin-top: 14px; font-size: 22px; line-height: 1.4;"><span style="display: inline-block; background: #D8DE00; border-radius: 8px; padding: 0 10px; font-weight: 600;">Elliot Miller</span><br>Renata Polastri<br>Joe Teibel<br>Matthew Gorham<br>Milly Bianda<br>Allie Willis</div></div><div class="r d4" style="text-align: center; width: 332px;"><div class="pill" style="background: #C0D8FF; font-size: 20px; height: 44px; text-transform: uppercase; letter-spacing: 0.04em;">Group 3</div><div style="margin-top: 14px; font-size: 22px; line-height: 1.4;"><span style="display: inline-block; background: #D8DE00; border-radius: 8px; padding: 0 10px; font-weight: 600;">Gina Kromrey</span><br>Chloe Rees<br>Emily Smith<br>Jasmin Khatkar<br>Dan Hopkins<br>Laura Marzec</div></div><div class="r d5" style="text-align: center; width: 332px;"><div class="pill" style="background: #C0D8FF; font-size: 20px; height: 44px; text-transform: uppercase; letter-spacing: 0.04em;">Group 4</div><div style="margin-top: 14px; font-size: 22px; line-height: 1.4;"><span style="display: inline-block; background: #D8DE00; border-radius: 8px; padding: 0 10px; font-weight: 600;">Claire Gordon</span><br>Rob Hines<br>Andrei Sandu<br>Kathryn Jackson<br>Luis Martinez<br>Jen Hall</div></div><div class="r d6" style="text-align: center; width: 332px;"><div class="pill" style="background: #C0D8FF; font-size: 20px; height: 44px; text-transform: uppercase; letter-spacing: 0.04em;">Group 5</div><div style="margin-top: 14px; font-size: 22px; line-height: 1.4;"><span style="display: inline-block; background: #D8DE00; border-radius: 8px; padding: 0 10px; font-weight: 600;">Monet Sommers</span><br>Jade Stanfield<br>Vanessa Jeschke<br>Gustavo Lopes<br>Alissa Abbey<br>Mary Darby</div></div><div class="r d7" style="text-align: center; width: 332px;"><div class="pill" style="background: #C0D8FF; font-size: 20px; height: 44px; text-transform: uppercase; letter-spacing: 0.04em;">Group 6</div><div style="margin-top: 14px; font-size: 22px; line-height: 1.4;"><span style="display: inline-block; background: #D8DE00; border-radius: 8px; padding: 0 10px; font-weight: 600;">Aislinn Barry</span><br>Cavan Riley<br>Andy Cole<br>Katrina Baker<br>Tiana Lee<br>Kiki McCalla</div></div><div class="r d8" style="text-align: center; width: 332px;"><div class="pill" style="background: #C0D8FF; font-size: 20px; height: 44px; text-transform: uppercase; letter-spacing: 0.04em;">Group 7</div><div style="margin-top: 14px; font-size: 22px; line-height: 1.4;"><span style="display: inline-block; background: #D8DE00; border-radius: 8px; padding: 0 10px; font-weight: 600;">Andy Keck</span><br>Katie Swietlik<br>Mercedes Andrada<br>Maria Levin<br>Krissy Swim<br>Morgan Capps</div></div></div>
+        </div>
+      </template></div>
+
+    <!-- 09 The Deck -->
+    <div class="fold hidden" data-fold="9"><template>
+        <div class="inner">
+          <div class="r" style="animation-delay: 0.4s; display: flex; align-items: center; gap: 18px; color: #F4F4F0; opacity: 0.8;"><div style="width: 90px; height: 1px; background: #F4F4F0;"></div><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F4F4F0" stroke-width="1.2"><path d="M12 3c3 3 6 6 6 9s-3 6-6 9c-3-3-6-6-6-9s3-6 6-9z"></path><circle cx="12" cy="12" r="2.4"></circle></svg><div style="width: 90px; height: 1px; background: #F4F4F0;"></div></div>
+          <div class="p d2" style="margin-top: 40px;"><svg style="width: 560px; height: auto; color: #F4F4F0; display: block;" viewBox="0 0 368.14 75.5" fill="currentColor" role="img" aria-label="The Deck"><path d="M10.71,74.59c-1.01,0-1.51-.37-1.51-1.11s.44-1.14,1.31-1.21l4.54-.71c1.34-.2,2.25-.55,2.72-1.06s.71-1.46.71-2.88V7.16c0-.94-.2-1.62-.6-2.02s-1.24-.6-2.52-.6c-2.49,0-4.94,1.07-7.36,3.22-2.42,2.15-4,5.61-4.74,10.38l-.5,3.33c-.14.88-.6,1.31-1.41,1.31-1,0-1.44-.57-1.31-1.71L.93,2.82c.14-1.55.74-2.32,1.81-2.32.47,0,.91.11,1.31.35.4.23,1.09.49,2.07.75.97.27,2.53.4,4.69.4h22.48c2.15,0,3.71-.13,4.69-.4.97-.27,1.68-.52,2.12-.75.43-.24.86-.35,1.26-.35,1.07,0,1.68.77,1.81,2.32l.91,18.24c.13,1.14-.3,1.71-1.31,1.71-.8,0-1.28-.43-1.41-1.31l-.5-3.33c-.67-4.77-2.21-8.23-4.63-10.38-2.42-2.15-4.91-3.22-7.46-3.22-1.28,0-2.12.2-2.52.6-.41.4-.61,1.07-.61,2.02v60.48c0,1.41.25,2.37.76,2.88.5.5,1.39.86,2.67,1.06l4.54.71c.87.07,1.31.47,1.31,1.21s-.5,1.11-1.51,1.11H10.71Z"></path><path d="M48.01,74.59c-.81,0-1.21-.37-1.21-1.11,0-.67.37-1.07,1.11-1.21l1.41-.2c1.41-.21,2.33-.61,2.77-1.21.43-.61.66-1.62.66-3.03V10.08c0-1.21-.19-2.03-.56-2.47-.37-.43-1.03-.72-1.96-.86l-2.12-.3c-.74-.14-1.11-.54-1.11-1.21s.37-1.07,1.11-1.21c1.88-.41,3.46-.87,4.74-1.41s2.35-1.07,3.23-1.61c1.07-.67,1.88-1.01,2.42-1.01.74,0,1.11.54,1.11,1.61v26.71c0,.6.2.96.6,1.06.41.1.91-.12,1.51-.66,2.55-2.35,4.8-3.97,6.75-4.84,1.95-.87,4-1.31,6.15-1.31,3.16,0,5.64,1.06,7.46,3.17,1.82,2.12,2.72,5.23,2.72,9.32v32.76c0,1.41.22,2.4.66,2.97.43.57,1.36.96,2.77,1.16l2.22.3c.74.14,1.11.54,1.11,1.21,0,.74-.4,1.11-1.21,1.11h-16.93c-.94,0-1.41-.37-1.41-1.11,0-.67.37-1.07,1.11-1.21l1.41-.2c1.41-.21,2.33-.61,2.77-1.21.43-.61.66-1.62.66-3.03v-31.65c0-3.29-.61-5.61-1.82-6.96s-2.92-2.02-5.14-2.02-4.08.62-5.8,1.87-3.08,2.89-4.09,4.94c-1,2.05-1.51,4.32-1.51,6.8v27.01c0,1.41.22,2.42.66,3.03.43.6,1.36.97,2.77,1.11l2.72.3c.74.14,1.11.54,1.11,1.21,0,.74-.4,1.11-1.21,1.11h-17.64Z"></path><path d="M112.02,75.5c-3.23,0-6.12-1.07-8.67-3.22s-4.59-5.19-6.1-9.12c-1.51-3.93-2.27-8.49-2.27-13.66s.77-9.98,2.32-14.01c1.55-4.04,3.66-7.19,6.35-9.48,2.69-2.28,5.68-3.42,8.97-3.42,3.97,0,7.17,1.63,9.63,4.89s3.68,8.55,3.68,15.87c0,2.22-.84,3.33-2.52,3.33h-19.15c-1.35,0-2.01.78-2.01,2.32,0,7.12,1.04,12.46,3.13,16.03,2.08,3.56,4.74,5.34,7.96,5.34,2.56,0,4.64-.91,6.25-2.72,1.61-1.81,2.92-4.87,3.93-9.17.2-.74.64-1.11,1.31-1.11.8,0,1.11.67.91,2.01-1.07,5.98-2.79,10.16-5.14,12.55-2.35,2.38-5.21,3.58-8.57,3.58ZM103.95,44.15h10.18c3.22,0,4.84-1.68,4.84-5.04,0-4.37-.54-7.79-1.61-10.28-1.07-2.48-2.69-3.73-4.84-3.73-2.62,0-4.82,1.51-6.6,4.54-1.78,3.02-2.94,7.33-3.48,12.9-.14,1.07.37,1.61,1.51,1.61Z"></path><path d="M202.72,74.59c-1.01,0-1.51-.37-1.51-1.11,0-.61.43-1.01,1.31-1.21l2.32-.41c2.28-.4,3.42-1.71,3.42-3.93V8.67c0-1.41-.22-2.35-.65-2.82-.44-.47-1.36-.84-2.77-1.11l-2.32-.4c-.87-.21-1.31-.61-1.31-1.21,0-.74.5-1.11,1.51-1.11h20.36c5.24,0,9.78,1.53,13.61,4.59,3.83,3.06,6.78,7.35,8.87,12.85,2.08,5.51,3.13,11.89,3.13,19.15s-1.09,13.68-3.27,19.05c-2.19,5.38-5.26,9.54-9.22,12.5-3.97,2.96-8.67,4.43-14.11,4.43h-19.35ZM222.48,71.97c5.98,0,10.54-2.85,13.66-8.57,3.12-5.71,4.68-13.98,4.68-24.8s-1.49-19.1-4.48-25.05c-2.99-5.95-7.41-8.92-13.26-8.92-5.11,0-7.66,2.46-7.66,7.36v52.62c0,2.69.55,4.59,1.67,5.7s2.9,1.66,5.39,1.66Z"></path><path d="M272.07,75.5c-3.23,0-6.12-1.07-8.67-3.22s-4.59-5.19-6.1-9.12c-1.51-3.93-2.27-8.49-2.27-13.66s.77-9.98,2.32-14.01c1.55-4.04,3.66-7.19,6.35-9.48,2.69-2.28,5.68-3.42,8.97-3.42,3.97,0,7.17,1.63,9.63,4.89s3.68,8.55,3.68,15.87c0,2.22-.84,3.33-2.52,3.33h-19.15c-1.35,0-2.01.78-2.01,2.32,0,7.12,1.04,12.46,3.13,16.03,2.08,3.56,4.74,5.34,7.96,5.34,2.56,0,4.64-.91,6.25-2.72,1.61-1.81,2.92-4.87,3.93-9.17.2-.74.64-1.11,1.31-1.11.8,0,1.11.67.91,2.01-1.07,5.98-2.79,10.16-5.14,12.55-2.35,2.38-5.21,3.58-8.57,3.58ZM264.01,44.15h10.18c3.22,0,4.84-1.68,4.84-5.04,0-4.37-.54-7.79-1.61-10.28-1.07-2.48-2.69-3.73-4.84-3.73-2.62,0-4.82,1.51-6.6,4.54-1.78,3.02-2.94,7.33-3.48,12.9-.14,1.07.37,1.61,1.51,1.61Z"></path><path d="M306.65,75.5c-2.96,0-5.63-.99-8.01-2.97-2.39-1.98-4.29-4.82-5.7-8.52s-2.12-8.1-2.12-13.21c0-5.71.86-10.68,2.57-14.92,1.71-4.23,4.05-7.51,7.01-9.83,2.96-2.32,6.25-3.48,9.88-3.48,3.09,0,5.51.6,7.26,1.81.67.47,1.01,1.21,1.01,2.22l.2,12.3c0,1.01-.41,1.51-1.21,1.51-.74,0-1.21-.44-1.41-1.31-.94-3.7-1.85-6.55-2.72-8.57-.87-2.01-1.78-3.41-2.72-4.18-.94-.77-1.99-1.16-3.13-1.16-1.35,0-2.74.77-4.18,2.32-1.45,1.55-2.65,4.05-3.63,7.51-.97,3.46-1.46,8.01-1.46,13.66,0,7.19.92,12.6,2.77,16.23,1.85,3.63,4.25,5.44,7.21,5.44,2.35,0,4.31-.98,5.9-2.92,1.58-1.95,2.94-5.48,4.08-10.58.2-.74.6-1.11,1.21-1.11.8,0,1.11.67.91,2.02-.74,4.7-1.76,8.35-3.08,10.93-1.31,2.59-2.85,4.37-4.63,5.34s-3.78,1.46-6,1.46Z"></path><path d="M325.4,74.59c-.81,0-1.21-.37-1.21-1.11,0-.67.37-1.07,1.11-1.21l1.41-.2c1.41-.21,2.33-.61,2.77-1.21.43-.61.66-1.62.66-3.03V10.08c0-1.21-.19-2.03-.56-2.47-.37-.43-1.03-.72-1.96-.86l-2.12-.3c-.74-.14-1.11-.54-1.11-1.21s.37-1.07,1.11-1.21c1.88-.41,3.46-.87,4.74-1.41s2.35-1.07,3.23-1.61c1.07-.67,1.88-1.01,2.42-1.01.74,0,1.11.54,1.11,1.61v42.23c0,.67.28,1.1.86,1.26.57.17,1.12-.05,1.66-.66l11.8-12.7c1.41-1.55,2-2.84,1.76-3.88-.24-1.04-1.03-1.7-2.37-1.96l-2.32-.41c-.87-.2-1.31-.64-1.31-1.31s.47-1.01,1.41-1.01h17.34c.94,0,1.41.37,1.41,1.11s-.44,1.14-1.31,1.21l-.91.1c-1.55.14-3.09.72-4.64,1.76s-3.39,2.67-5.54,4.89l-6.25,6.65c-1.41,1.55-1.75,3.06-1.01,4.54l12.7,24.39c.74,1.35,1.55,2.32,2.42,2.92.87.61,1.95,1.04,3.22,1.31l1.01.2c.8.2,1.21.6,1.21,1.21,0,.74-.47,1.11-1.41,1.11h-17.54c-.94,0-1.41-.37-1.41-1.11,0-.67.44-1.07,1.31-1.21l1.71-.2c2.55-.34,3.09-1.98,1.61-4.94l-9.58-18.65c-.34-.67-.82-1.04-1.46-1.11-.64-.07-1.23.17-1.76.71l-1.11,1.11c-.6.6-1,1.21-1.21,1.81-.21.61-.3,1.28-.3,2.02v14.82c0,1.41.22,2.42.66,3.03.43.6,1.36.97,2.77,1.11l2.72.3c.74.14,1.11.54,1.11,1.21,0,.74-.4,1.11-1.21,1.11h-17.64Z"></path><path d="M160.04,66.68c-11.44,0-20.61-9.35-20.61-20.7h6.12c0,8.01,6.52,14.42,14.5,14.42s14.5-6.41,14.5-14.42h6.12c0,11.35-9.18,20.7-20.61,20.7"></path><path d="M178.68,23.56c11.44,0,20.61,9.61,20.61,21.27h-6.12c0-8.24-6.52-14.96-14.5-14.96s-14.5,6.73-14.5,14.96h-6.12c0-11.67,9.18-21.27,20.61-21.27"></path></svg></div>
+          <div class="lede r d4" style="margin-top: 40px; font-size: 28px; color: #F4F4F0; max-width: 820px;">If a team needs a starting point, draw the cards for some inspiration.</div>
+          <a class="pill p d6" href="https://thedeck.sketchdeck.com" target="_blank" rel="noopener" style="margin-top: 44px; background: #D8DE00; color: #161638; height: 68px; font-size: 24px; text-transform: uppercase; letter-spacing: 0.04em; padding: 0 44px; text-decoration: none; gap: 14px;">Go to website <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#161638" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg></a>
+        </div>
+      </template></div>
+
+    <!-- 10 Work in parallel -->
+    <div class="fold hidden" data-fold="10"><template>
+        <div class="inner">
+          <div class="display" style="font-size: 132px;">
+            <div class="clip"><span>Don’t watch AI work.</span></div>
+            <div class="clip l2"><span>Work in parallel.</span></div>
+          </div>
+          <div class="lede r d2" style="margin-top: 24px; font-size: 28px;">Everyone gets hands-on, at the same time.</div>
+          <div style="display: flex; align-items: flex-start; justify-content: center; gap: 0; margin-top: 64px;">
+            <div class="p d3" style="display: flex; flex-direction: column; align-items: center; gap: 22px; width: 250px;">
+              <div style="width: 120px; height: 120px; border-radius: 50%; background: #C0D8FF; display: flex; align-items: center; justify-content: center; font-size: 40px; font-weight: 500;">1</div>
+              <div class="display" style="font-size: 44px;">Split up</div>
+            </div><div class="r d3" style="width: 90px; height: 2px; background: #161638; margin-top: 60px;"></div><div class="p d4" style="display: flex; flex-direction: column; align-items: center; gap: 22px; width: 250px;">
+              <div style="width: 120px; height: 120px; border-radius: 50%; background: #B8ACFF; display: flex; align-items: center; justify-content: center; font-size: 40px; font-weight: 500;">2</div>
+              <div class="display" style="font-size: 44px;">Experiment</div>
+            </div><div class="r d4" style="width: 90px; height: 2px; background: #161638; margin-top: 60px;"></div><div class="p d5" style="display: flex; flex-direction: column; align-items: center; gap: 22px; width: 250px;">
+              <div style="width: 120px; height: 120px; border-radius: 50%; background: #FFB2D5; display: flex; align-items: center; justify-content: center; font-size: 40px; font-weight: 500;">3</div>
+              <div class="display" style="font-size: 44px;">Test</div>
+            </div><div class="r d5" style="width: 90px; height: 2px; background: #161638; margin-top: 60px;"></div><div class="p d6" style="display: flex; flex-direction: column; align-items: center; gap: 22px; width: 250px;">
+              <div style="width: 120px; height: 120px; border-radius: 50%; background: #D8DE00; display: flex; align-items: center; justify-content: center; font-size: 40px; font-weight: 500;">4</div>
+              <div class="display" style="font-size: 44px;">Combine</div>
+            </div>
+          </div>
+        </div>
+      </template></div>
+
+    <!-- 11 Think about your demo -->
+    <div class="fold hidden" data-fold="11"><template>
+        <div class="inner">
+          <div class="display" style="font-size: 150px;">
+            <div class="clip"><span>Think about</span></div>
+            <div class="clip l2"><span>your demo</span></div>
+          </div>
+          <div class="grid" style="grid-template-columns: repeat(2, minmax(0, 1fr)); width: 1200px; margin-top: 64px;">
+            <div class="card p d3" style="height: 160px; background: #C0D8FF; font-size: 38px;">What did you make?</div>
+            <div class="card p d4" style="height: 160px; background: #B8ACFF; font-size: 38px;">Why did you make it?</div>
+            <div class="card p d5" style="height: 160px; background: #FFB2D5; font-size: 38px;">How did AI help?</div>
+            <div class="card p d6" style="height: 160px; background: #D8DE00; font-size: 38px;">What surprised you?</div>
+          </div>
+        </div>
+      </template></div>
+
+    <!-- 12 Awards -->
+    <div class="fold hidden" data-fold="12"><template>
+        <div class="inner">
+          <div class="display" style="font-size: 118px; color: #F4F4F0;">
+            <div class="clip"><span>There will be</span></div>
+            <div class="clip l2"><span>achievement awards!</span></div>
+          </div>
+          <div class="p d3" style="margin-top: 44px; width: 660px; height: 495px; border-radius: 28px; overflow: hidden; background: #161638; box-shadow: 0 30px 80px rgba(0,0,0,0.45);">
+            <video src="assets/awards.mp4" autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: cover; display: block;"></video>
+          </div>
+        </div>
+      </template></div>
+
+    <!-- 13 This could become real -->
+    <div class="fold hidden" data-fold="13"><template>
+        <div class="inner">
+          <div class="display" style="font-size: 170px;">
+            <div class="clip"><span>This could</span></div>
+            <div class="clip l2"><span>become real</span></div>
+          </div>
+          <div class="lede r d3" style="max-width: 1100px; margin-top: 44px; font-size: 32px;">A great prototype can be the start of something we actually build and implement at SketchDeck.</div>
+          <div class="card p d5" style="margin-top: 40px; height: 100px; padding: 0 48px; background: #FFFFFF; font-size: 28px; text-transform: none;">Make the potential clear. We can take the next step together.</div>
+        </div>
+      </template></div>
+
+    <!-- 14 Let's start building -->
+    <div class="fold hidden" data-fold="14"><template>
+        <div class="inner">
+          <div class="eyebrow r" style="animation-delay: 0.4s;">Are you ready?</div>
+          <div class="display" style="font-size: 210px; margin-top: 26px;">
+            <div class="clip"><span>Let’s start</span></div>
+            <div class="clip l2"><span>building!</span></div>
+          </div>
+          <div class="lede r d3" style="margin-top: 40px; font-size: 28px;">Please find your group quickly and settle somewhere in this room.</div>
+          <div class="r d5" style="display: flex; gap: 16px; margin-top: 30px; align-items: center; justify-content: center;">
+            <div class="pill" style="background: #161638; color: #D8DE00; text-transform: uppercase; letter-spacing: 0.04em;"><strong style="font-weight: 700; margin-right: 8px;">20 min</strong> to ideate</div>
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#161638" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
+            <div class="pill" style="background: #161638; color: #D8DE00; text-transform: uppercase; letter-spacing: 0.04em;"><strong style="font-weight: 700; margin-right: 8px;">100 min</strong> to build</div>
+          </div>
+        </div>
+      </template></div>
+
+    <!-- 15 Cheat sheet + chronometer -->
+    <div class="fold hidden" data-fold="15"><template>
+        <div class="inner" style="justify-content: flex-start; padding-top: 40px;">
+          <div class="display clip" style="font-size: 92px;"><span>Cheat sheet</span></div>
+
+          <div class="r d2" style="display: flex; align-items: center; gap: 34px; margin-top: 18px;">
+            <button class="tbtn" onclick="App.toggleTimer()" id="timerBtn" style="background: #161638; color: #FFFFFF; border: 2px solid #161638;">Start</button>
+            <div style="font-size: 168px; font-weight: 500; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; line-height: 1; min-width: 640px; text-align: center; color: #161638; opacity: 0.4;" id="timerText">0:00:00</div>
+            <button class="tbtn" onclick="App.resetTimer()" id="resetBtn" style="background: transparent; color: #161638; border: 2px solid #161638; opacity: 0.35;">Reset</button>
+          </div>
+
+          <div class="r d3" style="margin-top: 26px; font-size: 18px; display: flex; align-items: center; gap: 10px; white-space: nowrap;">
+            <span><strong style="font-weight: 700;">10 MIN</strong> Team Assemble + Get Settled</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#161638" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
+            <span><strong style="font-weight: 700;">20 MIN</strong> Ideation Sprint + The Deck</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#161638" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
+            <span><strong style="font-weight: 700;">100 MIN</strong> Build Sprint</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#161638" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
+            <span><strong style="font-weight: 700;">10 MIN</strong> Demo prep</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#161638" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
+            <span><strong style="font-weight: 700;">45 MIN</strong> Demos</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#161638" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
+            <span><strong style="font-weight: 700;">15 MIN</strong> Awards</span>
+          </div>
+
+          <div class="grid" style="grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 34px 24px; width: 1400px; margin-top: 34px;"><div class="r d4" style="text-align: center;"><div class="pill" style="background: #C0D8FF; font-size: 17px; height: 38px; text-transform: uppercase; letter-spacing: 0.04em;">Group 1</div><div style="margin-top: 10px; font-size: 18px; line-height: 1.35;"><span style="display: inline-block; background: #D8DE00; border-radius: 8px; padding: 0 10px; font-weight: 600;">Lucia Venzano</span><br>Jessica Madufor<br>Cristina Segar<br>Jordan Herelle<br>Chris Finneral</div></div><div class="r d5" style="text-align: center;"><div class="pill" style="background: #C0D8FF; font-size: 17px; height: 38px; text-transform: uppercase; letter-spacing: 0.04em;">Group 2</div><div style="margin-top: 10px; font-size: 18px; line-height: 1.35;"><span style="display: inline-block; background: #D8DE00; border-radius: 8px; padding: 0 10px; font-weight: 600;">Elliot Miller</span><br>Renata Polastri<br>Joe Teibel<br>Matthew Gorham<br>Milly Bianda<br>Allie Willis</div></div><div class="r d6" style="text-align: center;"><div class="pill" style="background: #C0D8FF; font-size: 17px; height: 38px; text-transform: uppercase; letter-spacing: 0.04em;">Group 3</div><div style="margin-top: 10px; font-size: 18px; line-height: 1.35;"><span style="display: inline-block; background: #D8DE00; border-radius: 8px; padding: 0 10px; font-weight: 600;">Gina Kromrey</span><br>Chloe Rees<br>Emily Smith<br>Jasmin Khatkar<br>Dan Hopkins<br>Laura Marzec</div></div><div class="r d7" style="text-align: center;"><div class="pill" style="background: #C0D8FF; font-size: 17px; height: 38px; text-transform: uppercase; letter-spacing: 0.04em;">Group 4</div><div style="margin-top: 10px; font-size: 18px; line-height: 1.35;"><span style="display: inline-block; background: #D8DE00; border-radius: 8px; padding: 0 10px; font-weight: 600;">Claire Gordon</span><br>Rob Hines<br>Andrei Sandu<br>Kathryn Jackson<br>Luis Martinez<br>Jen Hall</div></div><div class="r d8" style="text-align: center;"><div class="pill" style="background: #C0D8FF; font-size: 17px; height: 38px; text-transform: uppercase; letter-spacing: 0.04em;">Group 5</div><div style="margin-top: 10px; font-size: 18px; line-height: 1.35;"><span style="display: inline-block; background: #D8DE00; border-radius: 8px; padding: 0 10px; font-weight: 600;">Monet Sommers</span><br>Jade Stanfield<br>Vanessa Jeschke<br>Gustavo Lopes<br>Alissa Abbey<br>Mary Darby</div></div><div class="r d9" style="text-align: center;"><div class="pill" style="background: #C0D8FF; font-size: 17px; height: 38px; text-transform: uppercase; letter-spacing: 0.04em;">Group 6</div><div style="margin-top: 10px; font-size: 18px; line-height: 1.35;"><span style="display: inline-block; background: #D8DE00; border-radius: 8px; padding: 0 10px; font-weight: 600;">Aislinn Barry</span><br>Cavan Riley<br>Andy Cole<br>Katrina Baker<br>Tiana Lee<br>Kiki McCalla</div></div><div class="r d10" style="text-align: center;"><div class="pill" style="background: #C0D8FF; font-size: 17px; height: 38px; text-transform: uppercase; letter-spacing: 0.04em;">Group 7</div><div style="margin-top: 10px; font-size: 18px; line-height: 1.35;"><span style="display: inline-block; background: #D8DE00; border-radius: 8px; padding: 0 10px; font-weight: 600;">Andy Keck</span><br>Katie Swietlik<br>Mercedes Andrada<br>Maria Levin<br>Krissy Swim<br>Morgan Capps</div></div><a class="p d11" href="https://thedeck.sketchdeck.com" target="_blank" rel="noopener" style="display: flex; align-items: center; justify-content: center; background: #D8DE00; border-radius: 24px; font-size: 20px; text-decoration: underline; text-underline-offset: 5px; min-height: 160px; color: #161638;">thedeck.sketchdeck.com</a></div>
+        </div>
+      </template></div>
+
+  </div>
+
+  <div class="dots">
+    <button class="dot" onclick="App.jump(0)" aria-label="Fold 1"><span></span></button><button class="dot" onclick="App.jump(1)" aria-label="Fold 2"><span></span></button><button class="dot" onclick="App.jump(2)" aria-label="Fold 3"><span></span></button><button class="dot" onclick="App.jump(3)" aria-label="Fold 4"><span></span></button><button class="dot" onclick="App.jump(4)" aria-label="Fold 5"><span></span></button><button class="dot" onclick="App.jump(5)" aria-label="Fold 6"><span></span></button><button class="dot" onclick="App.jump(6)" aria-label="Fold 7"><span></span></button><button class="dot" onclick="App.jump(7)" aria-label="Fold 8"><span></span></button><button class="dot" onclick="App.jump(8)" aria-label="Fold 9"><span></span></button><button class="dot" onclick="App.jump(9)" aria-label="Fold 10"><span></span></button><button class="dot" onclick="App.jump(10)" aria-label="Fold 11"><span></span></button><button class="dot" onclick="App.jump(11)" aria-label="Fold 12"><span></span></button><button class="dot" onclick="App.jump(12)" aria-label="Fold 13"><span></span></button><button class="dot" onclick="App.jump(13)" aria-label="Fold 14"><span></span></button><button class="dot" onclick="App.jump(14)" aria-label="Fold 15"><span></span></button>
+  </div>
+
+  <button class="fs" onclick="App.fullscreen()" aria-label="Toggle fullscreen" id="fsBtn">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5"></path><path d="M20 9V4h-5"></path><path d="M4 15v5h5"></path><path d="M20 15v5h-5"></path></svg>
+  </button>
+</div>
+<script>
+(function () {
+  const SLIDES = 15;
+  const BGS = ['#C0D8FF', '#FFFFFF', '#F4F4F0', '#FFFFFF', '#F4F4F0', '#C0D8FF', '#F4F4F0', '#FFFFFF', '#161638', '#F4F4F0', '#FFFFFF', '#161638', '#C0D8FF', '#D8DE00', '#FFFFFF'];
+  const DARK = [8, 11];
+  const TRANSITION_MS = 750;
+  const wrap = document.getElementById('wrap'), stage = document.getElementById('stage'), bgDeck = document.getElementById('bgDeck');
+  const folds = [...document.querySelectorAll('.fold')];
+  const dots = [...document.querySelectorAll('.dot')];
+  let index = 0, prev = -1, locked = false, unlockTimer = null, wheelAcc = 0, wheelReset = null, touchY = null;
+  let running = false, elapsed = 0, startedAt = null;
+
+  function mount(i) { const f = folds[i]; if (!f.dataset.mounted) { f.appendChild(f.querySelector('template').content.cloneNode(true)); f.dataset.mounted = '1'; } }
+  function unmount(i) { const f = folds[i]; if (f.dataset.mounted) { [...f.children].forEach(c => { if (c.tagName !== 'TEMPLATE') c.remove(); }); delete f.dataset.mounted; } }
+  function render(dir) {
+    wrap.style.background = BGS[index];
+    wrap.classList.toggle('dark', DARK.includes(index));
+    folds.forEach((f, k) => {
+      f.classList.remove('hidden', 'enter-down', 'enter-up', 'leave-down', 'leave-up');
+      if (k === index) { mount(k); if (prev !== -1) f.classList.add(dir > 0 ? 'enter-down' : 'enter-up'); }
+      else if (k === prev) { f.classList.add(dir > 0 ? 'leave-down' : 'leave-up'); }
+      else { f.classList.add('hidden'); unmount(k); }
+    });
+    dots.forEach((d, k) => d.classList.toggle('on', k === index));
+    const showDeck = index === 8 || prev === 8;
+    bgDeck.hidden = !showDeck; bgDeck.classList.toggle('out', index !== 8);
+    if (index === 8 && prev !== 8) { bgDeck.style.animation = 'none'; void bgDeck.offsetWidth; bgDeck.style.animation = ''; }
+    const v = folds[11].querySelector('video'); if (v) { v.muted = true; const p = v.play(); if (p && p.catch) p.catch(() => {}); }
+  }
+  function jump(target) {
+    const next = Math.max(0, Math.min(SLIDES - 1, target));
+    if (locked || next === index) return;
+    locked = true; const dir = next > index ? 1 : -1; prev = index; index = next; render(dir);
+    clearTimeout(unlockTimer);
+    unlockTimer = setTimeout(() => { locked = false; prev = -1; render(dir); }, TRANSITION_MS);
+  }
+  function go(d) { jump(index + d); }
+  function resize() { const sc = Math.min(window.innerWidth / 1600, window.innerHeight / 900); stage.style.transform = 'translate(-50%, -50%) scale(' + sc + ')'; }
+  window.addEventListener('resize', resize);
+  window.addEventListener('wheel', (e) => {
+    if (e.ctrlKey || e.metaKey) return; e.preventDefault(); if (locked) return;
+    wheelAcc += e.deltaY; clearTimeout(wheelReset); wheelReset = setTimeout(() => { wheelAcc = 0; }, 180);
+    if (Math.abs(wheelAcc) > 60) { go(wheelAcc > 0 ? 1 : -1); wheelAcc = 0; }
+  }, { passive: false });
+  window.addEventListener('touchstart', (e) => { touchY = e.touches[0] ? e.touches[0].clientY : null; }, { passive: true });
+  window.addEventListener('touchend', (e) => { if (touchY == null || !e.changedTouches[0]) return; const dy = touchY - e.changedTouches[0].clientY; touchY = null; if (Math.abs(dy) > 50) go(dy > 0 ? 1 : -1); }, { passive: true });
+  window.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return; const t = e.target;
+    if (t && (t.isContentEditable || /^(INPUT|TEXTAREA)$/.test(t.tagName))) return;
+    if (e.key === ' ' && t && t.tagName === 'BUTTON') return;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); go(1); }
+    else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(-1); }
+    else if (e.key === 'Home') { e.preventDefault(); jump(0); }
+    else if (e.key === 'End') { e.preventDefault(); jump(SLIDES - 1); }
+  });
+  // timer
+  function elapsedMs() { return elapsed + (running && startedAt ? Date.now() - startedAt : 0); }
+  function renderTimer() {
+    const ms = elapsedMs(), total = Math.floor(ms / 1000);
+    const hh = Math.floor(total / 3600), mm = Math.floor((total % 3600) / 60), ss = total % 60, pad = (n) => String(n).padStart(2, '0');
+    const t = document.getElementById('timerText'), b = document.getElementById('timerBtn'), r = document.getElementById('resetBtn');
+    if (!t) return;
+    t.textContent = hh + ':' + pad(mm) + ':' + pad(ss); t.style.opacity = (running || ms > 0) ? 1 : 0.4;
+    b.textContent = running ? 'Pause' : (ms > 0 ? 'Resume' : 'Start'); b.style.background = running ? '#D8DE00' : '#161638'; b.style.color = running ? '#161638' : '#FFFFFF';
+    r.style.opacity = ms > 0 ? 1 : 0.35;
+  }
+  setInterval(renderTimer, 200);
+  window.App = {
+    jump, go,
+    toggleTimer() { if (running) { elapsed = elapsedMs(); running = false; startedAt = null; } else { running = true; startedAt = Date.now(); } renderTimer(); },
+    resetTimer() { running = false; elapsed = 0; startedAt = null; renderTimer(); },
+    fullscreen() { const el = document.documentElement; try { if (document.fullscreenElement) document.exitFullscreen(); else if (el.requestFullscreen) el.requestFullscreen().catch(() => {}); else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen(); } catch (err) {} }
+  };
+  if (!(document.fullscreenEnabled || document.webkitFullscreenEnabled)) document.getElementById('fsBtn').style.display = 'none';
+  resize(); render(1);
+})();
+</script>
+</body>
+</html>
