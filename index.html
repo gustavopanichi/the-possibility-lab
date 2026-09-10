@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Possibility Lab · SketchDeck Montreal Retreat 2026</title>
-<link rel="icon" href="assets/logo.png">
+<link rel="icon" id="favicon" type="image/png" href="assets/favicon/fav-0.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@400&display=swap" rel="stylesheet">
   <style>
     html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #C0D8FF; }
@@ -442,6 +442,28 @@
   };
   if (!(document.fullscreenEnabled || document.webkitFullscreenEnabled)) document.getElementById('fsBtn').style.display = 'none';
   resize(); render(1);
+})();
+
+(function () {
+  // Favicon mirrors the hero carousel: the same 12 renders turning on a vertical axis.
+  const link = document.getElementById('favicon'); if (!link) return;
+  const N = 12, PERIOD = 2800, size = 64;
+  const imgs = Array.from({ length: N }, (_, i) => { const im = new Image(); im.src = 'assets/favicon/fav-' + i + '.png'; return im; });
+  const canvas = document.createElement('canvas'); canvas.width = size; canvas.height = size;
+  const ctx = canvas.getContext('2d');
+  function tick() {
+    const t = Date.now();
+    const slot = Math.floor(t / PERIOD) % N, u = (t % PERIOD) / PERIOD;
+    const angle = (0.5 - u) * Math.PI, sx = Math.max(0.06, Math.abs(Math.cos(angle)));
+    const im = imgs[slot];
+    if (im.complete && im.naturalWidth) {
+      ctx.clearRect(0, 0, size, size);
+      ctx.save(); ctx.translate(size / 2, size / 2); ctx.scale(sx, 1);
+      ctx.drawImage(im, -size / 2, -size / 2, size, size); ctx.restore();
+      try { link.href = canvas.toDataURL('image/png'); } catch (err) {}
+    }
+  }
+  setInterval(tick, 110);
 })();
 </script>
 </body>
