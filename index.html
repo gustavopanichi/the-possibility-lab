@@ -36,9 +36,9 @@
     @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
     @keyframes spin3d {
       0% { transform: rotateY(90deg); animation-timing-function: cubic-bezier(0.25, 0.5, 0.6, 0.85); }
-      4.167% { transform: rotateY(0deg); animation-timing-function: cubic-bezier(0.4, 0.15, 0.75, 0.5); }
-      8.333% { transform: rotateY(-90deg); }
-      8.343%, 100% { transform: rotateY(90deg); }
+      4.545% { transform: rotateY(0deg); animation-timing-function: cubic-bezier(0.4, 0.15, 0.75, 0.5); }
+      9.091% { transform: rotateY(-90deg); }
+      9.101%, 100% { transform: rotateY(90deg); }
     }
     .r { animation: rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
     .p { animation: pop 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
@@ -55,7 +55,7 @@
 
     .stage3d { position: absolute; left: 50%; top: 118px; width: 600px; height: 600px; margin: 0 0 0 -300px; perspective: 1400px; }
     .fold.leave-down .stage3d, .fold.leave-up .stage3d { display: none; }
-    .stage3d .spin { position: absolute; inset: 0; width: 100%; height: 100%; animation: spin3d 33.6s linear infinite; backface-visibility: hidden; transform-style: preserve-3d; will-change: transform; }
+    .stage3d .spin { position: absolute; inset: 0; width: 100%; height: 100%; animation: spin3d 30.8s linear infinite; backface-visibility: hidden; transform-style: preserve-3d; will-change: transform; }
 
     .card { border-radius: 24px; display: flex; align-items: center; justify-content: center; text-align: center; text-transform: uppercase; }
     .pill { height: 56px; padding: 0 30px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 500; white-space: nowrap; }
@@ -97,7 +97,7 @@
     <div class="fold hidden" data-fold="1"><template>
         <div class="inner">
           <div class="f" style="position: absolute; top: 34px; left: 0; width: 100%; display: flex; justify-content: center; z-index: 2;"><img src="assets/logo.png" alt="SketchDeck, a 24 Seven company" style="width: 170px; height: auto; display: block;"></div>
-          <div class="stage3d f" style="animation-delay: 0.8s;"><img src="assets/fur.jpg" alt="" class="spin" style="animation-delay: -0.0s;"><img src="assets/fur-1.jpg" alt="" class="spin" style="animation-delay: -2.8s;"><img src="assets/fur-2.jpg" alt="" class="spin" style="animation-delay: -5.6s;"><img src="assets/fur-3.jpg" alt="" class="spin" style="animation-delay: -8.4s;"><img src="assets/fur-4.jpg" alt="" class="spin" style="animation-delay: -11.2s;"><img src="assets/fur-5.jpg" alt="" class="spin" style="animation-delay: -14.0s;"><img src="assets/fur-6.jpg" alt="" class="spin" style="animation-delay: -16.8s;"><img src="assets/fur-7.jpg" alt="" class="spin" style="animation-delay: -19.6s;"><img src="assets/fur-8.jpg" alt="" class="spin" style="animation-delay: -22.4s;"><img src="assets/fur-9.jpg" alt="" class="spin" style="animation-delay: -25.2s;"><img src="assets/fur-10.jpg" alt="" class="spin" style="animation-delay: -28.0s;"><img src="assets/fur-11.jpg" alt="" class="spin" style="animation-delay: -30.8s;"></div>
+          <div class="stage3d f" style="animation-delay: 0.8s;"><img src="assets/fur.jpg" alt="" class="spin" style="animation-delay: -0.0s;"><img src="assets/fur-1.jpg" alt="" class="spin" style="animation-delay: -2.8s;"><img src="assets/fur-2.jpg" alt="" class="spin" style="animation-delay: -5.6s;"><img src="assets/fur-3.jpg" alt="" class="spin" style="animation-delay: -8.4s;"><img src="assets/fur-4.jpg" alt="" class="spin" style="animation-delay: -11.2s;"><img src="assets/fur-5.jpg" alt="" class="spin" style="animation-delay: -14.0s;"><img src="assets/fur-6.jpg" alt="" class="spin" style="animation-delay: -16.8s;"><img src="assets/fur-8.jpg" alt="" class="spin" style="animation-delay: -19.6s;"><img src="assets/fur-9.jpg" alt="" class="spin" style="animation-delay: -22.4s;"><img src="assets/fur-10.jpg" alt="" class="spin" style="animation-delay: -25.2s;"><img src="assets/fur-11.jpg" alt="" class="spin" style="animation-delay: -28.0s;"></div>
           <div class="display" style="position: absolute; top: 206px; left: 0; font-size: 166px; line-height: 0.84; color: #161638;">
             <div class="clip"><span>The</span></div>
             <div class="clip l2"><span>Possibility</span></div>
@@ -447,7 +447,7 @@
 (function () {
   // Favicon mirrors the hero carousel: the same 12 renders turning on a vertical axis.
   const link = document.getElementById('favicon'); if (!link) return;
-  const N = 12, PERIOD = 2800, size = 64;
+  const N = 11, PERIOD = 2800, size = 64;
   const imgs = Array.from({ length: N }, (_, i) => { const im = new Image(); im.src = 'assets/favicon/fav-' + i + '.png'; return im; });
   const canvas = document.createElement('canvas'); canvas.width = size; canvas.height = size;
   const ctx = canvas.getContext('2d');
