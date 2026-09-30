@@ -106,6 +106,16 @@
     @keyframes dropIn { from { opacity: 0; transform: translateY(-40px); } to { opacity: 1; transform: none; } }
     /* floating pills */
     .float { animation-name: bob; animation-timing-function: ease-in-out; animation-iteration-count: infinite; }
+    .blabel { font-size: 15px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.6; }
+    .badges { display: flex; justify-content: center; gap: 20px; margin-top: 16px; }
+    .badge { width: 186px; text-align: center; }
+    .bimg { width: 136px; height: 136px; margin: 0 auto; transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1); }
+    .badge:hover .bimg { transform: scale(1.1); }
+    .bimg img { width: 100%; height: 100%; display: block; animation: bfloat 5.6s ease-in-out infinite, bglow 4.2s ease-in-out infinite; }
+    .bname { font-family: Syne, "Arial Narrow", Arial, sans-serif; text-transform: uppercase; font-size: 19px; letter-spacing: 0.02em; margin-top: 14px; line-height: 1.1; }
+    .bdesc { font-size: 14px; line-height: 1.35; opacity: 0.72; margin-top: 7px; }
+    @keyframes bfloat { 0%, 100% { transform: translateY(0) rotate(-2.5deg); } 50% { transform: translateY(-7px) rotate(2.5deg); } }
+    @keyframes bglow { 0%, 100% { filter: drop-shadow(0 0 0 rgba(216,222,0,0)); } 50% { filter: drop-shadow(0 0 20px rgba(216,222,0,0.55)); } }
     @keyframes bob { 0%, 100% { transform: translateY(0) rotate(-1.5deg); } 50% { transform: translateY(-14px) rotate(1.5deg); } }
     .float:hover { animation-play-state: paused; transform: none; transition: transform 0.4s ease; }
     /* confetti */
@@ -407,11 +417,25 @@
         </div>
       </template></div>
 
+    <!-- 16 Achievement awards -->
+    <div class="fold hidden" data-fold="16"><template>
+        <div class="inner" style="color: #F4F4F0;">
+          <div class="eyebrow r" style="animation-delay: 0.4s; color: #D8DE00;">Achievement awards</div>
+          <div class="display" style="font-size: 96px; margin-top: 18px;">
+            <div class="clip"><span>Merit badges</span></div>
+          </div>
+          <div class="r d2 blabel" style="margin-top: 40px;">Group merit badges</div>
+          <div class="badges"><div class="badge p" style="animation-delay: 0.55s;"><div class="bimg"><img src="assets/badges/trailblazer.png" alt="Trailblazer badge" style="animation-delay: 0.0s, 0.0s;"></div><div class="bname">Trailblazer</div><div class="bdesc">For the team that explored the boldest new direction.</div></div><div class="badge p" style="animation-delay: 0.63s;"><div class="bimg"><img src="assets/badges/happy-accident.png" alt="Happy Accident badge" style="animation-delay: -0.7s, -0.5s;"></div><div class="bname">Happy Accident</div><div class="bdesc">The best unexpected discovery.</div></div><div class="badge p" style="animation-delay: 0.71s;"><div class="bimg"><img src="assets/badges/trust-the-process.png" alt="Trust the Process badge" style="animation-delay: -1.4s, -1.0s;"></div><div class="bname">Trust the Process</div><div class="bdesc">For the team that embraced experimentation.</div></div><div class="badge p" style="animation-delay: 0.79s;"><div class="bimg"><img src="assets/badges/hidden-gem.png" alt="Hidden Gem badge" style="animation-delay: -2.1s, -1.5s;"></div><div class="bname">Hidden Gem</div><div class="bdesc">Underdog idea with lots of future potential.</div></div><div class="badge p" style="animation-delay: 0.87s;"><div class="bimg"><img src="assets/badges/north-star.png" alt="North Star badge" style="animation-delay: -2.8s, -2.0s;"></div><div class="bname">North Star</div><div class="bdesc">Idea with the clearest vision.</div></div><div class="badge p" style="animation-delay: 0.95s;"><div class="bimg"><img src="assets/badges/constellation.png" alt="Constellation badge" style="animation-delay: -3.5s, -2.5s;"></div><div class="bname">Constellation</div><div class="bdesc">Connected lots of ideas together.</div></div><div class="badge p" style="animation-delay: 1.03s;"><div class="bimg"><img src="assets/badges/alchemist.png" alt="Alchemist badge" style="animation-delay: -4.2s, -3.0s;"></div><div class="bname">Alchemist</div><div class="bdesc">Turned an ordinary idea into something special.</div></div></div>
+          <div class="r d4 blabel" style="margin-top: 30px;">Individual MVP merit badges</div>
+          <div class="badges"><div class="badge p" style="animation-delay: 1.15s;"><div class="bimg"><img src="assets/badges/pathfinder.png" alt="Pathfinder badge" style="animation-delay: 0.0s, 0.0s;"></div><div class="bname">Pathfinder</div><div class="bdesc">Found a clever solution nobody else thought of.</div></div><div class="badge p" style="animation-delay: 1.23s;"><div class="bimg"><img src="assets/badges/all-the-right-questions.png" alt="All the Right Questions badge" style="animation-delay: -0.7s, -0.5s;"></div><div class="bname">All the Right Questions</div><div class="bdesc">Strong prompting skills.</div></div></div>
+        </div>
+      </template></div>
+
   </div>
 
   <div class="rail" aria-hidden="true"><span id="railfill"></span></div>
   <div class="dots">
-    <button class="dot" onclick="App.jump(0)" aria-label="Fold 1"><span></span></button><button class="dot" onclick="App.jump(1)" aria-label="Fold 2"><span></span></button><button class="dot" onclick="App.jump(2)" aria-label="Fold 3"><span></span></button><button class="dot" onclick="App.jump(3)" aria-label="Fold 4"><span></span></button><button class="dot" onclick="App.jump(4)" aria-label="Fold 5"><span></span></button><button class="dot" onclick="App.jump(5)" aria-label="Fold 6"><span></span></button><button class="dot" onclick="App.jump(6)" aria-label="Fold 7"><span></span></button><button class="dot" onclick="App.jump(7)" aria-label="Fold 8"><span></span></button><button class="dot" onclick="App.jump(8)" aria-label="Fold 9"><span></span></button><button class="dot" onclick="App.jump(9)" aria-label="Fold 10"><span></span></button><button class="dot" onclick="App.jump(10)" aria-label="Fold 11"><span></span></button><button class="dot" onclick="App.jump(11)" aria-label="Fold 12"><span></span></button><button class="dot" onclick="App.jump(12)" aria-label="Fold 13"><span></span></button><button class="dot" onclick="App.jump(13)" aria-label="Fold 14"><span></span></button><button class="dot" onclick="App.jump(14)" aria-label="Fold 15"><span></span></button>
+    <button class="dot" onclick="App.jump(0)" aria-label="Fold 1"><span></span></button><button class="dot" onclick="App.jump(1)" aria-label="Fold 2"><span></span></button><button class="dot" onclick="App.jump(2)" aria-label="Fold 3"><span></span></button><button class="dot" onclick="App.jump(3)" aria-label="Fold 4"><span></span></button><button class="dot" onclick="App.jump(4)" aria-label="Fold 5"><span></span></button><button class="dot" onclick="App.jump(5)" aria-label="Fold 6"><span></span></button><button class="dot" onclick="App.jump(6)" aria-label="Fold 7"><span></span></button><button class="dot" onclick="App.jump(7)" aria-label="Fold 8"><span></span></button><button class="dot" onclick="App.jump(8)" aria-label="Fold 9"><span></span></button><button class="dot" onclick="App.jump(9)" aria-label="Fold 10"><span></span></button><button class="dot" onclick="App.jump(10)" aria-label="Fold 11"><span></span></button><button class="dot" onclick="App.jump(11)" aria-label="Fold 12"><span></span></button><button class="dot" onclick="App.jump(12)" aria-label="Fold 13"><span></span></button><button class="dot" onclick="App.jump(13)" aria-label="Fold 14"><span></span></button><button class="dot" onclick="App.jump(14)" aria-label="Fold 15"><span></span></button><button class="dot" onclick="App.jump(15)" aria-label="Fold 16"><span></span></button>
   </div>
 
   <button class="fs" onclick="App.fullscreen()" aria-label="Toggle fullscreen" id="fsBtn">
@@ -420,9 +444,9 @@
 </div>
 <script>
 (function () {
-  const SLIDES = 15;
-  const BGS = ['#C0D8FF', '#FFFFFF', '#F4F4F0', '#FFFFFF', '#F4F4F0', '#C0D8FF', '#F4F4F0', '#FFFFFF', '#161638', '#F4F4F0', '#FFFFFF', '#161638', '#C0D8FF', '#D8DE00', '#FFFFFF'];
-  const DARK = [8, 11];
+  const SLIDES = 16;
+  const BGS = ['#C0D8FF', '#FFFFFF', '#F4F4F0', '#FFFFFF', '#F4F4F0', '#C0D8FF', '#F4F4F0', '#FFFFFF', '#161638', '#F4F4F0', '#FFFFFF', '#161638', '#C0D8FF', '#D8DE00', '#FFFFFF', '#161638'];
+  const DARK = [8, 11, 15];
   const TRANSITION_MS = 750;
   const wrap = document.getElementById('wrap'), stage = document.getElementById('stage'), bgDeck = document.getElementById('bgDeck');
   const folds = [...document.querySelectorAll('.fold')];
